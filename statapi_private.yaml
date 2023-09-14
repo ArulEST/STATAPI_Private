@@ -11,8 +11,8 @@ info:
     # email: apiteam@swagger.io
     url: http://statapi-test.azurewebsites.net/
   x-logo:
-    # url: '../logo.png'
-    url: 'https://arulest.github.io/STATAPI_Private/logo.png'
+    url: '../logo.png'
+    # url: 'https://arulest.github.io/STATAPI_Private/logo.png'
     altText: STAT logo
   license:
     name: Apache 2.0
@@ -42,32 +42,29 @@ tags:
         •	**Order Status Tracking:** Easily monitor the status of orders, from creation to shipment and delivery, enabling real-time order tracking for customers and staff. 
   - name: vNEXT
     description: |
+      # Solution Approach
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The objective is to enhance the performance of our application by optimizing response times. 
-      # Solution Approach 
-      
-      <h3><b>DB Migration:</b></h3>
-      
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To facilitate the seamless integration of a high-volume client into our application, we undertook the migration from <b>“SQL to the Cosmos database”</b>.  
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This migration has significantly improved response times, reducing the processing time for order requests from <b>10s</b> to a mere <b>600ms</b>.
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To facilitate the seamless integration of a high-volume client into our application, we use Cosmos database that significantly improved response times, reducing the processing time for order requests. 
+      <h3><b>Concept</b></h3>
       
-      <h3><b>Concept:</b></h3>
-      
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The order will be temporarily generated in the Cosmos DB which then be transmitted to Azure via the service bus to create a record permanently in SQL database. 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When the user hits the new endpoint, it interacts with Cosmos, creates a temporary record and returns the response to the user with a standard set of information. 
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A distinct process is executed which retrieves the temporary records from Cosmos and generates an order in SQL DB. 
       
       <img src="../flowchart.png" />
 
-      <h3><b>Validation with Header-bound API keys:</b></h3>
+      <h3><b>Validation with Header-bound API keys </b></h3>
       
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; With the header-bound API keys, the validation is performed. When a vNext order creation endpoint is triggered, the API Key Message Handler validates the API key from the request header against the key available in the Cosmos DB, which currently serves as the central repository for API key validation.
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; With the header-bound API keys, the validation is performed. When a vNext order creation endpoint is triggered, the API Key Message Handler validates the API key from the request header against the key available in the Cosmos DB, which currently serves as the central repository for API key validation. 
       
-      <h3><b>Workflow Procedure:</b></h3>
+      <h3><b>Workflow Procedure</b></h3>
      
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation fails due to the non-existence of the API key in the Cosmos DB, the process halts, triggering an exception with the message "API key is invalid". 
-        
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Once the request header key is validated, using STAT base API controller, the customer API key, feature flag and price set of the customer have to be fetched from the cosmos DB. 
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Once the request header key is validated, using STAT base API controller, the customer API key, feature flag and price set of the customer have to be fetched from the cosmos DB.
       
-      <h3><b>JSON Validation:</b></h3>
+      <h3><b>JSON Validation</b></h3>
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The next step is to verify the input JSON, by checking whether the order endpoint holds the serviceable zip code and valid price set.  
         
@@ -81,16 +78,60 @@ tags:
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Failure</b> - However, if the validation fails due to zip code or price set, the order request is not stored, and the system generates the exceptions as a response. 
      
+     
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Zip code error response</b> - Either this order's delivery zip code is not serviceable at all or it cannot be serviced from your local service area. Please contact STAT customer service if you believe this to be inaccurate. We apologize for the inconvenience.
+     
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Price set error response</b> - Selected price set not available at this time. " +"Use api/PriceSets to get current list of available customer price sets.
+      
       <img src="../workflow.png" />
      
       <h3><b>Master data that exists in Cosmos:</b></h3>
         <ul>
-          <li>Customer API Key </li>
-          <li>Customer Price Set </li>
-          <li>ZipCodes </li>
-          <li>Cross Region Delivery </li>
+          <li>API Key</li>
+          <li>ZipCodes</li>
         </ul>
-        
+
+      # Code snippet  
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 1
+
+      <img src="../Codesnippet/vnext_order_1.png" />
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 2
+
+      <img src="../Codesnippet/vnext_order_2.png" />
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 3
+
+      <img src="../Codesnippet/vnext_order_3.png" />
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 4
+
+      <img src="../Codesnippet/vnext_order_4.png" />
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 5
+
+      <img src="../Codesnippet/vnext_order_5.png" />
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 6
+
+      <img src="../Codesnippet/vnext_order_6.png" />
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 7
+
+      <img src="../Codesnippet/vnext_order_7.png" />
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 8
+
+      <img src="../Codesnippet/vnext_order_8.png" />
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 9
+
+      <img src="../Codesnippet/vnext_order_9.png" />
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 1
+
+      <img src="../Codesnippet/vnext_order_1.png" />
+
   - name: CreateOrderInDto_model
     x-displayName: The Create Order Request Model
     description: |
