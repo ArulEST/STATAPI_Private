@@ -3,38 +3,25 @@ openapi: 3.0.0
 info:
   description: |
     This is a sample server STATAPI server.
-    
-
-    # Introduction 1
-
-
-    # Introduction 2
-    
-
-    # Introduction 3
   version: v1
   title: STATAPI-Private
   termsOfService: 'http://swagger.io/terms/'
   contact:
     name: API Support
-    email: apiteam@swagger.io
+    # email: apiteam@swagger.io
     url: http://statapi-test.azurewebsites.net/
   x-logo:
-    url: 'http://127.0.0.1:5500/MicrosoftTeams-image.png'
+    # url: '../logo.png'
+    url: 'https://arulest.github.io/STATAPI_Private/logo.png'
     altText: STAT logo
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 
-# host: 
-#   http://statapi-test.azurewebsites.net/
-# schemes:
-#  - http
-
 tags:
   - name: Orders
     description: |
-      The Orders module is designed to streamline the management of orders within the application. It provides a comprehensive set of endpoints and functionalities that allow users to create, retrieve, update, and delete orders. This module serves as the backbone for order processing, ensuring a seamless and efficient experience for the customers and administrators. 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Orders module is designed to streamline the management of orders within the application. It provides a comprehensive set of endpoints and functionalities that allow users to create, retrieve, update, and delete orders. This module serves as the backbone for order processing, ensuring a seamless and efficient experience for the customers and administrators. 
       
       
       Key features of the Orders module include: 
@@ -53,72 +40,90 @@ tags:
       
       
         •	**Order Status Tracking:** Easily monitor the status of orders, from creation to shipment and delivery, enabling real-time order tracking for customers and staff. 
+  - name: vNEXT
+    description: |
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The objective is to enhance the performance of our application by optimizing response times. 
+      # Solution Approach 
       
-      # Orders Creation Details 
-          This is a sample server STATAPI server.  
+      <h3><b>DB Migration:</b></h3>
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To facilitate the seamless integration of a high-volume client into our application, we undertook the migration from <b>“SQL to the Cosmos database”</b>.  
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This migration has significantly improved response times, reducing the processing time for order requests from <b>10s</b> to a mere <b>600ms</b>.
+      
+      <h3><b>Concept:</b></h3>
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The order will be temporarily generated in the Cosmos DB which then be transmitted to Azure via the service bus to create a record permanently in SQL database. 
+      
+      <img src="../flowchart.png" />
+
+      <h3><b>Validation with Header-bound API keys:</b></h3>
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; With the header-bound API keys, the validation is performed. When a vNext order creation endpoint is triggered, the API Key Message Handler validates the API key from the request header against the key available in the Cosmos DB, which currently serves as the central repository for API key validation.
+      
+      <h3><b>Workflow Procedure:</b></h3>
+     
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation fails due to the non-existence of the API key in the Cosmos DB, the process halts, triggering an exception with the message "API key is invalid". 
+        
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Once the request header key is validated, using STAT base API controller, the customer API key, feature flag and price set of the customer have to be fetched from the cosmos DB. 
+      
+      <h3><b>JSON Validation:</b></h3>
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The next step is to verify the input JSON, by checking whether the order endpoint holds the serviceable zip code and valid price set.  
+        
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Zipcode validation</b> - With the predefined conditions stored in the Cosmos DB, the zip code will be checked if it comes under the serviceable proximity region. 
+        
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Price set validation</b> - If the customer has the valid price set, the order request will be stored in the Cosmos DB.  
+
+      <h3><b>Results:</b></h3>
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Success</b> - When the zip code and price set validation succeed, a success response is generated confirming the order creation. 
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Failure</b> - However, if the validation fails due to zip code or price set, the order request is not stored, and the system generates the exceptions as a response. 
+     
+      <img src="../workflow.png" />
+     
+      <h3><b>Master data that exists in Cosmos:</b></h3>
+        <ul>
+          <li>Customer API Key </li>
+          <li>Customer Price Set </li>
+          <li>ZipCodes </li>
+          <li>Cross Region Delivery </li>
+        </ul>
+        
   - name: CreateOrderInDto_model
     x-displayName: The Create Order Request Model
     description: |
       <SchemaDefinition schemaRef="#/components/schemas/CreateOrderInDto" />    
-  # - name: Collectionlocation_model
-  #   x-displayName: The Collection location Model
-  #   description: |
-  #     <SchemaDefinition schemaRef="#/components/schemas/Collectionlocation" />
-  # - name: Deliverylocation_model
-  #   x-displayName: The Delivery location Model
-  #   description: |
-  #     <SchemaDefinition schemaRef="#/components/schemas/Deliverylocation" />
-  # - name: OnTimePriceModifier_model
-  #   x-displayName: The OnTime PriceModifier Model
-  #   description: |
-  #     <SchemaDefinition schemaRef="#/components/schemas/OnTimePriceModifier" />
-
   - name: CreateOrderOutDto_model
     x-displayName: The Create Order Response Model
     description: |
       <SchemaDefinition schemaRef="#/components/schemas/CreateOrderOutDto" />    
-  # - name: OrderStatusDto_model
-  #   x-displayName: The OrderStatusDto Model
-  #   description: |
-  #     <SchemaDefinition schemaRef="#/components/schemas/OrderStatusDto" />
-  # - name: CollectionArrivalWindow_model
-  #   x-displayName: The CollectionArrivalWindow Model
-  #   description: |
-  #     <SchemaDefinition schemaRef="#/components/schemas/CollectionArrivalWindow" />
-  # - name: DeliveryArrivalWindow_model
-  #   x-displayName: The OnTime DeliveryArrivalWindow Model
-  #   description: |
-  #     <SchemaDefinition schemaRef="#/components/schemas/DeliveryArrivalWindow" />    
+  - name: Cosmos_CreateOrderOutDto_model
+    x-displayName: The vNEXT Create Order Response Model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/Cosmos_CreateOrderOutDto" />  
 
 x-tagGroups:
   - name: General
     tags:
       - Orders
+      - vNEXT
   - name: Models
     tags:
       - CreateOrderInDto_model  
-      # - Collectionlocation_model   
-      # - Deliverylocation_model   
-      # - OnTimePriceModifier_model  
-     
       - CreateOrderOutDto_model
-      # - OrderStatusDto_model   
-      # - CollectionArrivalWindow_model   
-      # - DeliveryArrivalWindow_model   
-     
+      - Cosmos_CreateOrderOutDto_model
+
 paths:
   /api/orders:
     post:
       tags:
-      - Orders
+        - Orders
       summary: Create order.
       operationId: Orders_CreateOrder
       description: |
         This API endpoint facilitates the creation of a customer's order by capturing essential information such as quantities, prices, and location details. 
-
-        # Introduction 
-          This is a sample server STATAPI server.
-        
       parameters:
         - in: body
           name: orderDto
@@ -143,9 +148,40 @@ paths:
               $ref: '#/components/schemas/CreateOrderInDto'
         description: Order request body schema description.
         required: true 
-      security:
-        - api_key: []     
-    
+      # security:
+      #   - api_key: []     
+
+  /api/ordercreation:
+    post:
+      tags:
+        - vNEXT
+      summary: Create order.
+      operationId: Orders_ordercreation
+      description: |
+        This API endpoint facilitates the creation of a customer's order by capturing essential information such as quantities, prices, and location details. 
+      parameters:
+        - in: body
+          name: orderDto
+          required: true
+          schema:
+            $ref: '#/components/schemas/CreateOrderInDto'
+      responses:
+        "200":
+          description: OK successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cosmos_CreateOrderOutDto'
+        "400":
+          description: BadRequest
+      requestBody:
+        name: customerDto
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderInDto'
+        description: Order request body schema description.
+        required: true 
 components:
   schemas:
     Collectionlocation:
@@ -162,16 +198,16 @@ components:
         - PostalCode
         - State
       properties:
-        Zone:
-          type: string
-          description: The name of the collection zone
-          minLength: 0
-          maxLength: 50
-        ID:
-          type: string
-          description: Unique id generated by the STAT system. This is used as identifier
-          minLength: 0
-          maxLength: 50
+        # Zone:
+        #   type: string
+        #   description: The name of the collection zone
+        #   minLength: 0
+        #   maxLength: 50
+        # ID:
+        #   type: string
+        #   description: Unique id generated by the STAT system. This is used as identifier
+        #   minLength: 0
+        #   maxLength: 50
         ContactName:
           type: string
           description: Name of the contact person of collection location 
@@ -238,8 +274,8 @@ components:
           minLength: 0
           maxLength: 100
       example:
-        Zone: ""
-        ID: ""
+        # Zone: ""
+        # ID: ""
         ContactName: "Johnsons-6"
         CompanyName: "Johnsons-6"
         AddressLine1: "2334 Cedar Crest Blvd"
@@ -269,16 +305,16 @@ components:
         - PostalCode
         - State
       properties:
-        Zone:
-          type: string
-          description: The name of the delivery zone
-          minLength: 0
-          maxLength: 50
-        ID:
-          type: string
-          description: Unique id generated by the STAT system. This is used as identifier
-          minLength: 0
-          maxLength: 50
+        # Zone:
+        #   type: string
+        #   description: The name of the delivery zone
+        #   minLength: 0
+        #   maxLength: 50
+        # ID:
+        #   type: string
+        #   description: Unique id generated by the STAT system. This is used as identifier
+        #   minLength: 0
+        #   maxLength: 50
         ContactName:
           type: string
           description: Name of the contact person of delivery location 
@@ -345,8 +381,8 @@ components:
           minLength: 0
           maxLength: 100
       example:
-        Zone: ""
-        ID: ""
+        # Zone: ""
+        # ID: ""
         ContactName: "Tom Holland-525"
         CompanyName: "Medicare-525"
         AddressLine1: "9050 Markville Dr"
@@ -418,7 +454,7 @@ components:
         BasePrice:
           type: number
           format: double
-          description: 
+          description: Base price of the order 
         CODAmount:
           type: number
           format: double
@@ -426,49 +462,59 @@ components:
         SubTotal:
           type: number
           format: double
-          description: 
+          description: SubTotal of the order excluding the tax amount
         TaxTotal:
           type: number
           format: double
-          description: 
+          description: Total tax amount for the order 
         TotalCost:
           type: number
           format: double
-          description: 
+          description: Total cost of the order 
         PriceModifierTotalCost:
           type: number
           format: double
-          description: 
+          description: Price modifier for the total cost of the order 
         DeliveryCODRequired:
           type: boolean
-          description: To know whether DeliveryCOD is required or not.
+          description: To determine if DeliveryCOD is necessary or not. The options are <yes/no>.  
         OrderId:
           type: integer
           format: int64
-          description: 
+          description: The ID generated by the STAT system acts as a unique identifier for an order 
         UID:
           type: string
-          description: 
+          description: The ID generated by the STAT system acts as a unique identifier for an order 
+          minLength: 0
+          maxLength: 50
         OrderIdLink:
           type: string
-          description: 
+          description: The link or URL that provides access to order-specific information 
+          minLength: 0
+          maxLength: 2000
         CustomerId:
           type: integer
           format: int32
-          description: 
+          description: The system-generated ID for customers, serving as a unique identifier. 
         Customer:
           type: string
-          description: 
+          description: The customer for whom the order will be placed.  
+          minLength: 0
+          maxLength: 50
         BarcodeURL:
           type: string
-          description: 
+          description: The BarcodeURL helps to check the status of the ordered product.  
+          minLength: 0
+          maxLength: 2000
         Refrigerated:
           type: boolean
           description: This tells whether the product is refrigerated before or during the shipment.  
             The possible values are “true/false”. True represents that the product is refrigerated and false demotes it is not refrigerated  
         ID:
           type: string
-          description: 
+          description: The ID generated by the system serves as a unique identifier  
+          minLength: 0
+          maxLength: 50
         TrackingNumber:
           type: string
           description: The tracking number acts as a unique identifier to track the package in real time during the shipment.
@@ -476,12 +522,14 @@ components:
           maxLength: 50
         RequestedBy:
           type: string
-          description: Order requester name
+          description: The individual who requested the order  
           minLength: 0
           maxLength: 50
         BasePriceType:
           type: string
-          description: 
+          description: This indicates the Basepricetype of the order
+          minLength: 0
+          maxLength: 50
         Description:
           type: string
           description: It is a free text field where the special instructions about the product, shipment can be added 
@@ -494,16 +542,21 @@ components:
           maxLength: 2000
         DateSubmitted:
           type: string
-          description: 
+          format: date-time
+          description: The date of order submission 
         RouteName:
           type: string
-          description: 
+          description: The designated shipping route for the order
+          minLength: 0
+          maxLength: 50
         StatusLevel:
-          type: string
-          description: 
+          type: integer
+          format: int32
+          description: This signifies the current order status level 
         CollectionArrivalDate:
           type: string
-          description: 
+          format: date-time
+          description: The scheduled date for the package to be collected from the specified collection location. 
         CollectionContactName:
           type: string
           description: Name of the peron from whom the package should be collected 
@@ -511,14 +564,16 @@ components:
           maxLength: 50
         CollectionCODRequired:
           type: boolean
-          description: CollectionCODRequired
+          description: This indicates whether collection COD is required 
+            The potential values are "Yes/No," where "Yes" signifies that the COD is required, and "No" signifies that it is not required. 
         CollectionSignatureRequired:
           type: boolean
-          description: Denotes whether it is required to get the signature from the person after collecting the package 
+          description: This indicates whether obtaining a signature from the recipient is necessary after package collection. 
+            The potential values are "Yes/No," where "Yes" signifies that the signature is required, and "No" signifies that it is not required. 
         Distance:
           type: number
           format: double
-          description: Distance estimated for the delivery 
+          description: Distance estimated for the delivery  
         Height:
           type: number
           format: double
@@ -541,34 +596,36 @@ components:
           description: Order quantity 
         PriceSet:
           type: string
-          description: PriceSet 
+          description: Priceset of the package 
           minLength: 0
           maxLength: 50
         DeclaredValue:
           type: number
           format: double
-          description: Order declared value
+          description: The amount value declared for the order 
         DeliveryArrivalDate:
           type: string
           format: date-time
-          description: 
+          description: The scheduled date for the package to be delivered at the specified location. 
         DeliveryEstimateEarliest:
           type: string
           format: date-time
-          description: 
+          description: The previously estimated delivery date 
         DeliveryEstimateLatest:
           type: string
           format: date-time
-          description: 
+          description: The newly estimated delivery date 
         DeliverySignatureRequired:
           type: boolean
-          description: Denotes whether it is required to get the signature from the person after delivering the package 
+          description: Indicates whether a signature is necessary from the recipient upon package delivery. 
+            The potential values are "Yes/No," where "Yes" signifies that the signature is required, and "No" signifies that it is not required. 
         SuppressUserNotification:
           type: boolean
-          description: This is to denote whether notification has to be sent to the user or not 
+          description: This allows to prevent or disable notifications intended for a user.  
+            The potential values are "Yes/No," where "Yes" signifies that the notifications should not be sent, and "No" signifies that notification has to to be sent.  
         PurchaseOrderNumber:
           type: string
-          description: PurchaseOrderNumber acts as a unique identifier to track the purchase order.
+          description: PurchaseOrderNumber serves as a unique identifier to track the purchase order.  
           minLength: 0
           maxLength: 50
         ReferenceNumber:
@@ -578,7 +635,8 @@ components:
           maxLength: 50
         ShortCodeOptIn:
           type: boolean
-          description: ShortCodeOptIn
+          description: It signifies whether a shortcodeoptin is required or not. 
+            The potential values are "Yes/No," where "Yes" signifies that the shortcodeoptin is required, and "No" signifies that it is not required. 
         CollectionLocation:
           $ref: '#/components/schemas/Collectionlocation'
         DeliveryLocation:
@@ -589,35 +647,40 @@ components:
             $ref: '#/components/schemas/OnTimePriceModifier'
         IsCustomerPortal:
           type: boolean
-          description: IsCustomerPortal
+          description: It signifies whether the customerportal is required or not. 
+            The potential values are "Yes/No," where "Yes" signifies that the customerportal is required, and "No" signifies that it is not required. 
         IsUpdateOnTime:
           type: boolean
-          description: IsUpdateOnTime
+          description: It signifies whether the update on time is required or not. 
+            The potential values are "Yes/No," where "Yes" signifies that the update on time is required, and "No" signifies that it is not required. 
         ShipToInjectionPoint:
           type: boolean
-          description: It represents shipment to injection point is needed or not 
+          description: It signifies whether a shipment to the injection point is required or not. 
+            The potential values are "Yes/No," where "Yes" signifies that the shipment is required, and "No" signifies that it is not required.  
         ShippinglabelSize:
           type: string
-          description: Size of the shipping label 
+          description: Represents the size of the shipping label  
           minLength: 0
           maxLength: 50
         RXNumber:
           type: string
-          description: order RXNumber describe
+          description: RXNumber serves as a unique identifier for the package.
           minLength: 0
           maxLength: 250
         SignatureType:
           type: string
-          description: Direct/Indirect 
+          description: This denotes whether the signature should be received from the desired contact.  
+            The possible values are “Direct/Indirect” where “Direct” signifies that the signature needs to be received from the desired person and “Indirect” signifies that it is not needed to be collected from the desired person   
           minLength: 0
           maxLength: 50
         IsAdultSignature:
           type: boolean
-          description: Denotes the signature is received from an adult  
+          description: Denotes the signature is received from an adult.   
+            The possible values are “Yes/No” where “Yes” signifies that the signature was received from an adult person and “No” signifies that it is not an adult signature  
         ParentOrderId:
           type: integer
           format: int64
-          description: 
+          description: The parent ID generated by the system serves as a unique identifier for an order 
       example:
         BasePrice: 0
         CODAmount: 20
@@ -663,8 +726,8 @@ components:
         ReferenceNumber: null
         ShortCodeOptIn: false
         CollectionLocation:
-          Zone: ""
-          ID: ""
+          # Zone: ""
+          # ID: ""
           ContactName: "Johnsons-6"
           CompanyName: "Johnsons-6"
           AddressLine1: "2334 Cedar Crest Blvd"
@@ -679,8 +742,8 @@ components:
           Category: null
           LatitudeLongitude: null
         DeliveryLocation:
-          Zone: ""
-          ID: ""
+          # Zone: ""
+          # ID: ""
           ContactName: "Tom Holland-525"
           CompanyName: "Medicare-525"
           AddressLine1: "9050 Markville Dr"
@@ -752,11 +815,11 @@ components:
         EarliestTime:
           type: string
           format: date-time
-          description: 
+          description: The earliest estimated collection time 
         LatestTime:
           type: string
           format: date-time
-          description: 
+          description: The recently estimated collection time 
       example:
         EarliestTime: "2023-09-05T15:20:31.539697Z"
         LatestTime: "2023-09-06T02:00:00Z"
@@ -768,11 +831,11 @@ components:
         EarliestTime:
           type: string
           format: date-time
-          description: 
+          description: The earliest estimated delivery time 
         LatestTime:
           type: string
           format: date-time
-          description: 
+          description: The recently estimated delivery time  
       example:
         EarliestTime: "2023-09-06T12:00:00Z"
         LatestTime: "2023-09-06T16:00:00Z"
@@ -783,73 +846,117 @@ components:
       properties:
         error:
           type: string
-          description:  
+          description: An error had occurred while processing the request. Kindly contact STAT support to know further details   
+          minLength: 0
+          maxLength: 2000
         ID:
           type: string
-          description: 
+          description: Unique id generated by the STAT system. This is used as identifier
+          minLength: 0
+          maxLength: 50
         TrackingNumber:
           type: string
-          description: 
+          description: The tracking number acts as a unique identifier to track the package in real-time during the shipment. 
+          minLength: 0
+          maxLength: 50
         TrackingURL:
           type: string
-          description: 
+          description: Helps to track and get the status of the movement of the package order. 
+          minLength: 0
+          maxLength: 2000
         BarcodeURL:
           type: string
-          description: 
+          description: The BarcodeURL helps to check the status of the ordered product.  
+          minLength: 0
+          maxLength: 2000
         ShippingLabel:
           type: string
-          description: 
+          description: The label affixed on the package gives comprehensive information regarding the shipment.
+          minLength: 0
+          maxLength: 2000
         VpodDownload:
           type: string
           description: 
+          minLength: 0
+          maxLength: 2000
         SignatureURL:
           type: string
-          description: 
+          description: The system generates a URL to get the digital signature from the individual  
+          minLength: 0
+          maxLength: 2000 
         Refrigerated:
           type: boolean
-          description: 
+          description: This tells whether the product is refrigerated before or during the shipment.  
+            The possible values are “Yes/No”. True represents that the product is refrigerated and false demotes it is not refrigerated  
         StatusUpdates:
           $ref: '#/components/schemas/OrderStatusDto'
         DeliveryContactName:
           type: string
-          description: 
+          description: Name of the individual to contact during the delivery 
+          minLength: 0
+          maxLength: 50
         StatusCode:
           type: integer
           format: int32
-          description: 
+          description: Status code of the order package 
         CustomerAccount:
           type: string
-          description:  
+          description: Account number of the customer
+          minLength: 0
+          maxLength: 50
         Description:
           type: string
-          description: 
+          description: It is a free text field where the special instructions about the product, shipment can be added 
+          minLength: 0
+          maxLength: 2000
         Comments:
           type: string
-          description: 
+          description: It’s a free text field to add comments  
+          minLength: 0
+          maxLength: 2000
+        Customer:
+          type: string
+          description: Name of the customer 
+          minLength: 0
+          maxLength: 50  
         PriceSet:
           type: string
-          description:  
+          description: Priceset of the package   
+          minLength: 0
+          maxLength: 50 
         CollectionArrivalWindow:
-          $ref: '#/components/schemas/Collectionlocation'
+          $ref: '#/components/schemas/CollectionArrivalWindow'
         DeliveryArrivalWindow:
-          $ref: '#/components/schemas/Deliverylocation'
+          $ref: '#/components/schemas/DeliveryArrivalWindow'
         CollectionSignatureRequired:
           type: boolean
-          description: 
+          description: This indicates whether obtaining a signature from the recipient is necessary after package collection. 
+            The potential values are "Yes/No," where "Yes" signifies that the signature is required, and "No" signifies that it is not required. 
         DeliverySignatureRequired:
           type: boolean
-          description: 
+          description: Indicates whether a signature is necessary from the recipient upon package delivery. 
+            The potential values are "Yes/No," where "Yes" signifies that the signature is required, and "No" signifies that it is not required. 
         SuppressUserNotification:
           type: boolean
-          description: 
+          description: This allows to prevent or disable notifications intended for a user. 
+            The potential values are "Yes/No," where "Yes" signifies that the notifications should not be sent, and "No" signifies that notification has to to be sent.  
+        CollectionLocation:
+          $ref: '#/components/schemas/Collectionlocation'
+        DeliveryLocation:
+          $ref: '#/components/schemas/Deliverylocation'
         TotalCost:
           type: number
           format: double
-          description:  
+          description: Total cost of the order 
         DeclaredValue:
           type: number
           format: double
-          description: 
+          description: The amount value declared for the order 
+        DriverInstruction:
+          type: string
+          description: A text field that allows for the inclusion of instructions to provide to drivers.  
+          minLength: 0
+          maxLength: 200 
       example:
         RegionCode: null
         error: null
@@ -885,8 +992,8 @@ components:
         DeliverySignatureRequired: false
         SuppressUserNotification: false
         CollectionLocation: 
-          Zone: ""
-          ID: ""
+          # Zone: ""
+          # ID: ""
           ContactName: "Johnsons"
           CompanyName: "PKR pharmacy"
           AddressLine1: "2334 Cedar Crest Blvd"
@@ -901,8 +1008,8 @@ components:
           Category: null
           LatitudeLongitude: null
         DeliveryLocation: 
-          Zone: ""
-          ID: ""
+          # Zone: ""
+          # ID: ""
           ContactName: "Tom Holland"
           CompanyName: "Medicare"
           AddressLine1: "9050 Markville Dr"
@@ -920,7 +1027,91 @@ components:
         TotalCost: 0.0
         DriverInstruction: "Drop the package at the front door"
       xml:
-        name: CreateOrderOutDto             
+        name: CreateOrderOutDto 
+
+    Cosmos_CreateOrderOutDto:
+      type: object
+      properties:
+        UID:
+          type: string
+          description: Unique id generated by the STAT system. This is used as identifier
+          minLength: 0
+          maxLength: 50
+        TrackingNumber:
+          type: string
+          description: The tracking number acts as a unique identifier to track the package in real-time during the shipment. 
+          minLength: 0
+          maxLength: 50
+        CollectionLocation:
+          $ref: '#/components/schemas/Collectionlocation'
+        DeliveryLocation:
+          $ref: '#/components/schemas/Deliverylocation'  
+        Refrigerated:
+          type: boolean
+          description: This tells whether the product is refrigerated before or during the shipment.  
+            The possible values are “Yes/No”. True represents that the product is refrigerated and false demotes it is not refrigerated    
+        StatusCode:
+          type: integer
+          format: int32
+          description: Status code of the order package 
+        Description:
+          type: string
+          description: It is a free text field where the special instructions about the product, shipment can be added 
+          minLength: 0
+          maxLength: 2000
+        Comments:
+          type: string
+          description: It’s a free text field to add comments  
+          minLength: 0
+          maxLength: 2000  
+        CollectionSignatureRequired:
+          type: boolean
+          description: This indicates whether obtaining a signature from the recipient is necessary after package collection. 
+            The potential values are "Yes/No," where "Yes" signifies that the signature is required, and "No" signifies that it is not required. 
+        DeliverySignatureRequired:
+          type: boolean
+          description: Indicates whether a signature is necessary from the recipient upon package delivery. 
+            The potential values are "Yes/No," where "Yes" signifies that the signature is required, and "No" signifies that it is not required. 
+        SuppressUserNotification:
+          type: boolean
+          description: This allows to prevent or disable notifications intended for a user. 
+            The potential values are "Yes/No," where "Yes" signifies that the notifications should not be sent, and "No" signifies that notification has to to be sent.   
+      example:
+        UID: "ef018f60-34b0-44f7-aa20-a2a479a24bc2"
+        TrackingNumber: "78788055"
+        collectionLocation: 
+          ContactName: "Johnsons-6"
+          CompanyName: "Johnsons-6"
+          AddressLine1: "2334 Cedar Crest Blvd"
+          AddressLine2: ""
+          City: "Dallas"
+          State: "TX"
+          PostalCode: "75203"
+          Country: "United States"
+          Comments: null,
+          Email: "pharma@yopmail.com"
+          Phone: 3333344445
+        deliveryLocation: 
+          ContactName: "Tom Holland-525"
+          CompanyName: "Medicare-525"
+          AddressLine1: "9050 Markville Dr"
+          AddressLine2: ""
+          City: "Dallas"
+          State: "TX"
+          PostalCode: "75243-1254"
+          Country: "United States"
+          Comments: null,
+          Email: "uzumaki@yopmail.com"
+          Phone: "+914444444446"
+        Refrigerated: false
+        StatusCode: 0
+        Description: "Fragile Handle with care: Glass material"
+        Comments: "Fragile Handle with care: Glass material"
+        CollectionSignatureRequired: false
+        DeliverySignatureRequired: false
+        SuppressUserNotification: false
+      xml:
+        name: Cosmos_CreateOrderOutDto             
   securitySchemes:
     api_key:
       description: >
