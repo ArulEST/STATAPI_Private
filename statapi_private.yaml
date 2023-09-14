@@ -11,8 +11,8 @@ info:
     # email: apiteam@swagger.io
     url: http://statapi-test.azurewebsites.net/
   x-logo:
-    url: '../logo.png'
-    # url: 'https://arulest.github.io/STATAPI_Private/logo.png'
+    # url: '../logo.png'
+    url: 'https://arulest.github.io/STATAPI_Private/logo.png'
     altText: STAT logo
   license:
     name: Apache 2.0
@@ -52,7 +52,7 @@ tags:
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A distinct process is executed which retrieves the temporary records from Cosmos and generates an order in SQL DB. 
       
-      <img src="../flowchart.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/flowchart.png" />
 
       <h3><b>Validation with Header-bound API keys </b></h3>
       
@@ -81,9 +81,9 @@ tags:
      
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Zip code error response</b> - Either this order's delivery zip code is not serviceable at all or it cannot be serviced from your local service area. Please contact STAT customer service if you believe this to be inaccurate. We apologize for the inconvenience.
      
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Price set error response</b> - Selected price set not available at this time. " +"Use api/PriceSets to get current list of available customer price sets.
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Price set error response</b> - Selected price set not available at this time. Use api/PriceSets to get current list of available customer price sets.
       
-      <img src="../workflow.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/workflow.png" />
      
       <h3><b>Master data that exists in Cosmos:</b></h3>
         <ul>
@@ -92,45 +92,49 @@ tags:
         </ul>
 
       # Code snippet  
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 1
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The order request header key is validated with the API key in cosmos DB  
 
-      <img src="../Codesnippet/vnext_order_1.png" />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the key exists in Cosmos DB – isvalid status will be True 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 2
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the key doesn’t exist in Cosmos DB – validate the request header key with the ASP Net user table ID in SQL DB 
 
-      <img src="../Codesnippet/vnext_order_2.png" />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation succeeds - isvalid status will be True 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 3
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_1.png" />
 
-      <img src="../Codesnippet/vnext_order_3.png" />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation fails, check if the Bearer token exists in the header and the parameter should be non-empty.  
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 4
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the bearer token doesn’t exist, check if the header has the parameters with key “type”, wise and schedular. If anyone is present, isvalid is true
 
-      <img src="../Codesnippet/vnext_order_4.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_2.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 5
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
 
-      <img src="../Codesnippet/vnext_order_5.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_3.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 6
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
 
-      <img src="../Codesnippet/vnext_order_6.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_4.png" />
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_5.png" />
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_6.png" />
       
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 7
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
 
-      <img src="../Codesnippet/vnext_order_7.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_7.png" />
       
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 8
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
 
-      <img src="../Codesnippet/vnext_order_8.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_8.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 9
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
 
-      <img src="../Codesnippet/vnext_order_9.png" />
-
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Image 1
-
-      <img src="../Codesnippet/vnext_order_1.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_9.png" />
 
   - name: CreateOrderInDto_model
     x-displayName: The Create Order Request Model
