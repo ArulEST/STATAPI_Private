@@ -87,11 +87,11 @@ tags:
      
       <h3><b>Master data that exists in Cosmos:</b></h3>
         <ul>
-          <li>API Key</li>
+          <li>Customer API key</li>
           <li>ZipCodes</li>
         </ul>
 
-      # Code snippet  
+      # Code Snippet  
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The order request header key is validated with the API key in cosmos DB  
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the key exists in Cosmos DB – isvalid status will be True 
@@ -100,12 +100,16 @@ tags:
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation succeeds - isvalid status will be True 
 
+
+
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_1.png" />
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation fails, check if the Bearer token exists in the header and the parameter should be non-empty.  
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the bearer token doesn’t exist, check if the header has the parameters with key “type”, wise and schedular. If anyone is present, isvalid is true
 
+
+      
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_2.png" />
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
