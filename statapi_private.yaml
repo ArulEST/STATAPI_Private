@@ -92,66 +92,114 @@ tags:
         </ul>
 
       # Code Snippet  
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The order request header key is validated with the API key in cosmos DB  
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the key exists in Cosmos DB – isvalid status will be True 
+      <h3><b>Order creation</b></h3>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The order request header key is verified against the API key in Cosmos DB. 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the key doesn’t exist in Cosmos DB – validate the request header key with the ASP Net user table ID in SQL DB 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the key is found in Cosmos DB, the isvalid status will be set to True.
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation succeeds - isvalid status will be True 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the key is not found in Cosmos DB, the request header key is then checked against the ASP Net user table ID in the SQL DB. 
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation is successful, the isvalid status will be set to True. 
 
 
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_1.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_1.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation fails, check if the Bearer token exists in the header and the parameter should be non-empty.  
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation is unsuccessful, verify whether the Bearer token is present in the header and that the parameter is not empty. 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the bearer token doesn’t exist, check if the header has the parameters with key “type”, wise and schedular. If anyone is present, isvalid is true
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the Bearer token is absent, examine the header for parameters with the keys "type," "wise," and "scheduler." If any one of these parameters is present, set isvalid to true. 
 
 
       
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_2.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_2.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When an order is initiated from the STAT Portal, the CustomerId found in the header is employed to authenticate the endpoint request. 
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_3.png" />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the customerid is found in the SQL table, the isvalid status is set to true. 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_3.png" />
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_4.png" />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If none of the above mentioned conditions are met, and if the endpoint is "api/OnTimeUpdates," isvalid will be set to true. For all other endpoints, isvalid will be false, and the response returned will be "Api Key Not Valid." 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_4.png" />
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_5.png" />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Verify the API key in Cosmos DB and confirm whether the retrieved key exists in the customer API key table. If it exists, associate it with the API key list; if not, raise an exception “Something went wrong. Please contact STAT support” 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_5.png" />
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_6.png" />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Validate the Create Order request values against the collection and delivery location details. 
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; First, verify that the address Line 1, City, State, and Postal code are valid. If any of these details are invalid, send the respective exceptions. 
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next, ensure that the "Deliverysignaturerequired" condition is true, the "isadultsignature" condition in the orderDTO is also true, and the signature type is not empty. All these conditions collectively indicate that the order is ready to be placed.  
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_6.png" />
       
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Validate if the delivery zip code falls within the serviceable region and if there is a valid price set for the customer.
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_7.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_7.png" />
       
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If all the above conditions are met, "Create Order" values are stored in Cosmos DB. 
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_8.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_8.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Generate the response to be sent. 
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vnext_order_9.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_9.png" />
+
+      <h3><b>Push to Servicebus</b></h3>
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Servicebus/vnext_servicebus_1.png" />
+
+     
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Servicebus/vnext_servicebus_2.png" />
+
+      <h3><b>Azure Function to Create the Order</b></h3>
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Azure_Function/vnext_azurefunction_1.png" />
+
+     
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Azure_Function/vnext_azurefunction_2.png" />
+
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Azure_Function/vnext_azurefunction_3.png" />
+
+      <h3><b>Master Sync</b></h3>
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_1.png" />
+
+     
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_2.png" />
+
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_3.png" />
+
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_4.png" />
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_1_1.png" />
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_1_2.png" />
+
+     
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_2_1.png" />
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_2_2.png" />
 
   - name: CreateOrderInDto_model
-    x-displayName: The Create Order Request Model
+    x-displayName: The create order request model
     description: |
       <SchemaDefinition schemaRef="#/components/schemas/CreateOrderInDto" />    
   - name: CreateOrderOutDto_model
-    x-displayName: The Create Order Response Model
+    x-displayName: The create order response model
     description: |
       <SchemaDefinition schemaRef="#/components/schemas/CreateOrderOutDto" />    
-  - name: Cosmos_CreateOrderOutDto_model
-    x-displayName: The vNEXT Create Order Response Model
+ 
+  - name: Cosmos_CreateOrderOutSchema_model
+    x-displayName: The vNEXT create order response model
     description: |
-      <SchemaDefinition schemaRef="#/components/schemas/Cosmos_CreateOrderOutDto" />  
+      <SchemaDefinition schemaRef="#/components/schemas/Cosmos_CreateOrderOutSchema" />  
 
 x-tagGroups:
   - name: General
@@ -162,7 +210,9 @@ x-tagGroups:
     tags:
       - CreateOrderInDto_model  
       - CreateOrderOutDto_model
-      - Cosmos_CreateOrderOutDto_model
+      - GetOrderUpdatesSchema_model
+ 
+      - Cosmos_CreateOrderOutSchema_model
 
 paths:
   /api/orders:
@@ -198,8 +248,7 @@ paths:
         description: Order request body schema description.
         required: true 
       # security:
-      #   - api_key: []     
-
+      #   - api_key: [] 
   /api/ordercreation:
     post:
       tags:
@@ -220,7 +269,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cosmos_CreateOrderOutDto'
+                $ref: '#/components/schemas/Cosmos_CreateOrderOutSchema'
         "400":
           description: BadRequest
       requestBody:
@@ -231,6 +280,7 @@ paths:
               $ref: '#/components/schemas/CreateOrderInDto'
         description: Order request body schema description.
         required: true 
+
 components:
   schemas:
     Collectionlocation:
@@ -831,24 +881,25 @@ components:
         Date:
           type: string
           format: date-time
-          description: 
+          description: Order delivery date 
         Description:
           type: string
-          description: 
+          description: This is a free text field where the special instructions about the product, shipment are added 
         Exception:
           type: boolean
-          description: 
+          description: This indicates whether the exceptions are required or not. 
+            The potential values are "Yes/No," where "Yes" signifies that the exceptions are required, and "No" signifies that it is not required. 
         ExceptionCode:
           type: integer
           format: int32
-          description: 
+          description: The code designated for specific exceptions. 
         LocalTime:
           type: string
           format: date-time
-          description: 
+          description: Time in the local zone 
         Region:
           type: string
-          description: 
+          description: Denotes the delivery region  
       example:
         Date: "2023-09-05T15:20:38.0755622Z"
         Description: "Order received"
@@ -1078,7 +1129,7 @@ components:
       xml:
         name: CreateOrderOutDto 
 
-    Cosmos_CreateOrderOutDto:
+    Cosmos_CreateOrderOutSchema:
       type: object
       properties:
         UID:
@@ -1160,7 +1211,8 @@ components:
         DeliverySignatureRequired: false
         SuppressUserNotification: false
       xml:
-        name: Cosmos_CreateOrderOutDto             
+        name: Cosmos_CreateOrderOutSchema             
+  
   securitySchemes:
     api_key:
       description: >
