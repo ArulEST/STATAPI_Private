@@ -150,42 +150,42 @@ tags:
 
       <h3><b>Push to Servicebus</b></h3>
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Servicebus/vnext_servicebus_1.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Servicebus/vnext_servicebus_1.png" />
 
      
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Servicebus/vnext_servicebus_2.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Servicebus/vnext_servicebus_2.png" />
 
       <h3><b>Azure Function to Create the Order</b></h3>
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Azure_Function/vnext_azurefunction_1.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Azure_Function/vnext_azurefunction_1.png" />
 
      
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Azure_Function/vnext_azurefunction_2.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Azure_Function/vnext_azurefunction_2.png" />
 
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Azure_Function/vnext_azurefunction_3.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Azure_Function/vnext_azurefunction_3.png" />
 
       <h3><b>Master Sync</b></h3>
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_1.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_1.png" />
 
      
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_2.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_2.png" />
 
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_3.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_3.png" />
 
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_4.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_4.png" />
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_1_1.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_1_1.png" />
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_1_2.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_1_2.png" />
 
      
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_2_1.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_2_1.png" />
 
-      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/Master_Sync/vnext_mastersync_2_2.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_2_2.png" />
 
   - name: CreateOrderInDto_model
     x-displayName: The create order request model
