@@ -175,15 +175,18 @@ tags:
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the method call still fails after the 10th attempt, a notification email will be sent to the configured email address with the following message: 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; “Hi there, 
+     
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; “<i>Hi there</i>, 
       
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; “The Order# {trackingNumber} creation failed in STAT Portal, it exceeded max retry attempts. , 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>The Order# {trackingNumber} creation failed in STAT Portal, it exceeded max retry attempts</i>.
       
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thanks, 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Thanks</i>, 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STAT Team” 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>STAT Team</i>” 
+
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If further retries are required after the initial 10 attempts, they will take place at intervals of 1800 seconds. 
  
-
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Azure_Function/vnext_azurefunction_2.png" />
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The JSON data and the API key are supplied as parameters to the <b>PostOrdersUsingSTAT_API</b> method. Subsequently, the order is generated in the SQL database via the endpoint “api/orders”, and the outcome of the order placement, either success or failure, is returned. 
@@ -254,14 +257,14 @@ tags:
 x-tagGroups:
   - name: General
     tags:
-      - Orders
+      # - Orders
       - vNEXT
-  - name: Models
-    tags:
-      - CreateOrderInDto_model  
-      - CreateOrderOutDto_model
+  # - name: Models
+  #   tags:
+  #     - CreateOrderInDto_model  
+  #     - CreateOrderOutDto_model
  
-      - Cosmos_CreateOrderOutSchema_model
+  #     - Cosmos_CreateOrderOutSchema_model
 
 paths:
   # Public EndPoints:
