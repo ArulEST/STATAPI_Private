@@ -9,7 +9,7 @@ info:
   contact:
     name: API Support
     # email: apiteam@swagger.io
-    url: http://statapi-test.azurewebsites.net/
+    # url: http://statapi-test.azurewebsites.net/
   x-logo:
     # url: '../logo.png'
     url: 'https://arulest.github.io/STATAPI_Private/logo.png'
@@ -45,24 +45,24 @@ tags:
       # Solution Approach
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The objective is to enhance the performance of our application by optimizing response times. 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To facilitate the seamless integration of a high-volume client into our application, we use Cosmos database that significantly improved response times, reducing the processing time for order requests. 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To facilitate the seamless integration of a high-volume client into our application, we use Cosmos database that significantly improved response times, reducing the processing time for order requests.  
       <h3><b>Concept</b></h3>
       
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When the user hits the new endpoint, it interacts with Cosmos, creates a temporary record and returns the response to the user with a standard set of information. 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A distinct process is executed which retrieves the temporary records from Cosmos and generates an order in SQL DB. 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A distinct process is executed which retrieves the temporary records from Cosmos and generates an order in SQL DB.  
       
       <img src="https://arulest.github.io/STATAPI_Private/flowchart.png" />
 
-      <h3><b>Validation with Header-bound API keys </b></h3>
+      <h3><b>Validation with Header-bound API keys</b></h3>
       
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; With the header-bound API keys, the validation is performed. When a vNext order creation endpoint is triggered, the API Key Message Handler validates the API key from the request header against the key available in the Cosmos DB, which currently serves as the central repository for API key validation. 
       
       <h3><b>Workflow Procedure</b></h3>
      
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation fails due to the non-existence of the API key in the Cosmos DB, the process halts, triggering an exception with the message "API key is invalid". 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation fails due to the non-existence of the API key in the Cosmos DB, the process halts, triggering an exception with the message "<i>API key is invalid</i>". 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Once the request header key is validated, using STAT base API controller, the customer API key, feature flag and price set of the customer have to be fetched from the cosmos DB.
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Once the request header key is validated, using STAT base API controller, the customer API key, feature flag and price set of the customer have to be fetched from the cosmos DB. 
       
       <h3><b>JSON Validation</b></h3>
 
@@ -76,27 +76,22 @@ tags:
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Success</b> - When the zip code and price set validation succeed, a success response is generated confirming the order creation. 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Failure</b> - However, if the validation fails due to zip code or price set, the order request is not stored, and the system generates the exceptions as a response. 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Failure</b> - However, if the validation fails due to zip code or price set, the order request is not stored, and the system generates the exceptions as a response.
      
-     
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Zip code error response</b> - Either this order's delivery zip code is not serviceable at all or it cannot be serviced from your local service area. Please contact STAT customer service if you believe this to be inaccurate. We apologize for the inconvenience.
-     
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Price set error response</b> - Selected price set not available at this time. Use api/PriceSets to get current list of available customer price sets.
-      
       <img src="https://arulest.github.io/STATAPI_Private/workflow.png" />
      
       <h3><b>Master data that exists in Cosmos:</b></h3>
         <ul>
-          <li>Customer API key</li>
+          <li>API key</li>
           <li>ZipCodes</li>
         </ul>
 
       # Code Snippet  
 
-      <h3><b>Order creation</b></h3>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The order request header key is verified against the API key in Cosmos DB. 
+      <h3><b>Creating an order in Cosmos</b></h3>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The order request header key is verified against the API key in Cosmos DB.  
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the key is found in Cosmos DB, the isvalid status will be set to True.
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the key is found in Cosmos DB, the isvalid status will be set to True. 
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the key is not found in Cosmos DB, the request header key is then checked against the ASP Net user table ID in the SQL DB. 
 
@@ -106,7 +101,7 @@ tags:
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_1.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation is unsuccessful, verify whether the Bearer token is present in the header and that the parameter is not empty. 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the validation is unsuccessful, verify whether the Bearer token is present in the header and that the parameter is not empty.
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the Bearer token is absent, examine the header for parameters with the keys "type," "wise," and "scheduler." If any one of these parameters is present, set isvalid to true. 
 
@@ -116,15 +111,15 @@ tags:
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When an order is initiated from the STAT Portal, the CustomerId found in the header is employed to authenticate the endpoint request. 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the customerid is found in the SQL table, the isvalid status is set to true. 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the customer ID is found in the SQL table, the isvalid status is set to true.  
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_3.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If none of the above mentioned conditions are met, and if the endpoint is "api/OnTimeUpdates," isvalid will be set to true. For all other endpoints, isvalid will be false, and the response returned will be "Api Key Not Valid." 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If none of the above-mentioned conditions are met, and if the endpoint is "api/OnTimeUpdates", isvalid will be set to true. For all other endpoints, isvalid will be false, and the response returned will be "<i>Api Key Not Valid</i>." 
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_4.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Verify the API key in Cosmos DB and confirm whether the retrieved key exists in the customer API key table. If it exists, associate it with the API key list; if not, raise an exception “Something went wrong. Please contact STAT support” 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Verify the API key in Cosmos DB and confirm whether the retrieved key exists in the customer table. If it exists, associate it with the API key list; if not, raise an exception “<i>Something went wrong. Please contact STAT support</i>” 
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_5.png" />
 
@@ -132,11 +127,11 @@ tags:
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; First, verify that the address Line 1, City, State, and Postal code are valid. If any of these details are invalid, send the respective exceptions. 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next, ensure that the "Deliverysignaturerequired" condition is true, the "isadultsignature" condition in the orderDTO is also true, and the signature type is not empty. All these conditions collectively indicate that the order is ready to be placed.  
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next, ensure that the "Deliverysignaturerequired" condition is true, the "isadultsignature" condition in the orderDTO is also true, and the signature type is not empty. All these conditions collectively indicate that the order is ready to be placed. 
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_6.png" />
       
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Validate if the delivery zip code falls within the serviceable region and if there is a valid price set for the customer.
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Validate if the delivery zip code falls within the serviceable region and if there is a valid price set for the customer. 
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_7.png" />
       
@@ -144,21 +139,37 @@ tags:
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_8.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Generate the response to be sent. 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Trigger an entry to the service bus “<b>customorderprocess</b>” 
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/vnext_order_9.png" />
 
-      <h3><b>Push to Servicebus</b></h3>
+      <h3><b>Service Bus</b></h3>
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Cosmos DB temporary order record includes a UID, which is a unique identifier generated by STAT for each order. This UID is transmitted to the service bus.
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Azure function called "<b>customorderprocess</b>" is configured as depicted in the image. 
+
+      ...
+      
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/image.png" />
+     
+      ...
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Cosmos DB temporary order record includes a UID, which is a unique identifier generated by STAT for each order. This UID is transmitted to the service bus. 
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Servicebus/vnext_servicebus_1.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The UID is created as an entry in the service bus queues.
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The order's UID is subsequently passed to the service bus for processing. 
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Servicebus/vnext_servicebus_2.png" />
 
-      <h3><b>Azure Function to Create the Order</b></h3>
+      <h3><b>Azure function</b></h3>
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Azure function called "CustomOrder" is configured as depicted in the image. 
+
+      ...
+      
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/image.png" />
+      
+      ...
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Following that, the UID is verified against the "order detail" collection in Cosmos to retrieve the corresponding data. 
 
@@ -166,13 +177,28 @@ tags:
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The data is transformed into JSON format, and then the PostOrderUsingSTAT_API method is invoked.  
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; In case the method call encounters a failure, it should not be retried more than 10 times. If it exceeds this limit, a response indicating that the maximum retry attempts have been reached will be sent.  
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; In case the method call encounters a failure, it will undergo up to 10 retry attempts, with the following time intervals (in seconds):  
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Furthermore, the customer will receive an email notification regarding the failure of the retry attempt. 
+      ...
+
+      <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/image.png" />
+     
+      ...
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the method call still fails after the 10th attempt, a notification email will be sent to the configured email address with the following message: 
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; “Hi there, 
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; “The Order# {trackingNumber} creation failed in STAT Portal, it exceeded max retry attempts. , 
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thanks, 
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STAT Team” 
+ 
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Azure_Function/vnext_azurefunction_2.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The JSON data and the API key are supplied as parameters to the PostOrdersUsingSTAT_API method. Subsequently, the order is generated in the SQL database via the endpoint api/orders, and the outcome of the order placement, either success or failure, is returned. 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The JSON data and the API key are supplied as parameters to the <b>PostOrdersUsingSTAT_API</b> method. Subsequently, the order is generated in the SQL database via the endpoint “api/orders”, and the outcome of the order placement, either success or failure, is returned. 
       
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Azure_Function/vnext_azurefunction_3.png" />
 
@@ -180,15 +206,20 @@ tags:
 
       <b>Automatic</b> 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; There are two timer functions (SyncCustomerValues and SyncZipCode) employed to synchronize master data from SQL to Cosmos DB, scheduled to run daily at 2 AM. 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; There are two Azure functions employed to synchronize master data from SQL to Cosmos DB, scheduled to run daily at 2 AM. 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; In the automatic mode, if any modifications occur in the customer API key outside of application, SyncCustomerValues function automatically detects these changes and transmits the updated information to the Azure service bus for customer data synchronization in Cosmos.  
+      <ul>
+        <li>SyncCustomerValues</li>
+        <li>SyncZipCode</li>
+      </ul>
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If no changes are detected, the system sends the existing data for synchronization. This process occurs daily at 2 AM
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; In the automatic mode, if any modifications occur in the customer API key outside of application, <b>SyncCustomerValues</b> function automatically detects these changes and transmits the updated information to the Azure service bus for customer data synchronization in Cosmos.  
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If no changes are detected, the system sends the existing data for synchronization. This process occurs daily at 2 AM. 
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_1.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If any modifications occur in the Zip code, SyncZipCode function automatically detects these changes and transmits the updated information to the Azure service bus for customer data synchronization in Cosmos.  
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If any modifications occur in the Zip code, <b>SyncZipCode</b> function automatically detects these changes and transmits the updated information to the Azure service bus for customer data synchronization in Cosmos.   
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If no changes are detected, the system sends the existing data for synchronization. This process occurs daily at 2 AM. 
 
@@ -196,11 +227,15 @@ tags:
 
       <b>Manual</b> 
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the zip code is modified via the STAT app portal, the ZipCodeSyncCosmos function will trigger a request to the Azure service bus to synchronize the updated zip code information with Cosmos DB.
+      #### ZipCodeSyncCosmos
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the zip code is modified via the STAT app portal, the “<b>ZipCodeSyncCosmos</b>” function will trigger a request to the Azure service bus instantly to synchronize the updated zip code information with Cosmos DB. 
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_3.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the customer API key is modified via the STAT app portal, the CustomerSyncCosmos function will trigger a request to the Azure service bus to synchronize the updated zip code information with Cosmos DB. 
+      #### CustomerSyncCosmos
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If the customer API key is modified via the STAT app portal, the “<b>CustomerSyncCosmos</b>” function will trigger a request to the Azure service bus instantly to synchronize the updated zip code information with Cosmos DB. 
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_4.png" />
       
@@ -209,7 +244,7 @@ tags:
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_1_1.png" />
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_1_2.png" />
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; With the help of customer's ID, the zip code is checked and the newly received data will be applied as updates for that specific customer. 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; With the help of customer's ID, the zip code is checked and the newly received data will be applied as updates for that specific customer.
 
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_2_1.png" />
       <img src="https://arulest.github.io/STATAPI_Private/Codesnippet/vNEXT/OrderCreation/Master_Sync/vnext_mastersync_2_2.png" />
