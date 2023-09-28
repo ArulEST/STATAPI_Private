@@ -320,7 +320,7 @@ paths:
   /api/ordercreation:
     post:
       tags:
-        - vNEXT
+        - vNEXT_Orders
       summary: Create order.
       operationId: Orders_ordercreation
       description: |
