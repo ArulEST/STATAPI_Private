@@ -4,8 +4,8 @@ info:
   # version: v1
   title: STATAPI-vNEXT
   x-logo:
-    url: '../Image/logo.png'
-    # url: 'https://arulest.github.io/STATAPI_Private/logo.png'
+    # url: '../Image/logo.png'
+    url: 'https://arulest.github.io/STATAPI_Private/Image/logo.png'
     altText: STAT logo
 
 tags:
@@ -21,7 +21,7 @@ tags:
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A distinct process is executed which retrieves the temporary records from Cosmos and generates an order in SQL DB.  
       
-      <img src="https://arulest.github.io/STATAPI_Private/flowchart.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Image/flowchart.png" />
 
       <h3><b>Validation with Header-bound API keys</b></h3>
       
@@ -47,7 +47,7 @@ tags:
 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Failure</b> - However, if the validation fails due to zip code or price set, the order request is not stored, and the system generates the exceptions as a response.
      
-      <img src="https://arulest.github.io/STATAPI_Private/workflow.png" />
+      <img src="https://arulest.github.io/STATAPI_Private/Image/workflow.png" />
      
       <h3><b>Master data that exists in Cosmos:</b></h3>
         <ul>
