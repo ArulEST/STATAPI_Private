@@ -4,7 +4,7 @@
     "title": "STATAPI-vNEXT",
     "x-logo": {
       "url": "../Redoc/Image/logo.png",
-      "altText": "STAT logo"
+      "altText": "STAT_logo"
     }
   },
   "tags": [
